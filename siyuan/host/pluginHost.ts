@@ -11,6 +11,7 @@ import { Menu } from "siyuan"
 import { App as VueApp, nextTick } from "vue"
 import { createSiyuanAppLogger } from "~/siyuan/appLogger.ts"
 import PublisherPlugin from "~/siyuan/index.ts"
+import { showForkIfDesktop } from "~/fork/index.ts"
 import { createApp, type InitialView } from "./createApp.ts"
 import type { SettingsSection } from "~/src/ui/composables/useSettings.ts"
 
@@ -25,10 +26,13 @@ interface ShowPluginHostOptions {
   docId?: string
   /** 进入快速发布后立即对该平台执行发布（文档块菜单的一键入口） */
   autoPublishPlatformKey?: string
+  /** 强制走 Menu 浮层（跳过右侧 Dock） */
+  forceMenu?: boolean
 }
 
 /**
  * 插件运行时宿主，基于思源原生 Menu 挂载真实 DOM。
+ * 桌面端优先交给 fork 的右侧 Dock；移动端 / forceMenu 仍用 Menu。
  */
 export class PluginHost {
   private readonly logger
@@ -123,6 +127,11 @@ export class PluginHost {
   }
 
   public async show(options: ShowPluginHostOptions = {}): Promise<void> {
+    if (await showForkIfDesktop(this.pluginInstance, options)) {
+      await this.close()
+      return
+    }
+
     if (this.showPromise) {
       return this.showPromise
     }

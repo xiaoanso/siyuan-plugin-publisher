@@ -14,6 +14,7 @@ import { Topbar } from "./topbar"
 import { ILogger } from "zhi-lib-base"
 import { ConfigManager } from "~/siyuan/store/config.ts"
 import { PreferenceConfigManager } from "~/siyuan/store/preferenceConfigManager.ts"
+import { installFork, type ForkHandle } from "~/fork/index.ts"
 import { PluginHost } from "~/siyuan/host/pluginHost.ts"
 import { buildDocQuickPublishMenus, docMenuIcons } from "~/siyuan/host/docMenu.ts"
 
@@ -33,6 +34,8 @@ export default class PublisherPlugin extends Plugin {
   public kernelApi: SiyuanKernelApi
   /** 全插件唯一插件宿主，避免 Topbar / 文档菜单各建实例导致双 Menu 与卸载竞态 */
   public readonly pluginHost: PluginHost
+  /** 二开生命周期（右侧 Dock 等），实现都在 fork/ */
+  private readonly fork: ForkHandle
 
   private publishSetting: any
   private prefSetting: any
@@ -49,15 +52,17 @@ export default class PublisherPlugin extends Plugin {
     this.kernelApi = new SiyuanKernelApi(siyuanConfig)
 
     this.pluginHost = new PluginHost(this)
+    this.fork = installFork(this)
     this.topbar = new Topbar(this)
   }
 
   openSetting(): void {
-    // 思源宿主「插件设置」入口：直接打开 设置视图
+    // 思源宿主「插件设置」入口：直接打开 设置视图（桌面走右侧 Dock）
     void this.pluginHost.show({ initialView: "settings" })
   }
 
   onload() {
+    this.fork.onload()
     // 初始化菜单
     this.topbar.initTopbar()
     // mountFn
@@ -71,6 +76,7 @@ export default class PublisherPlugin extends Plugin {
 
   onunload() {
     void this.pluginHost.close()
+    this.fork.onunload()
     // unmountFn
     this.unmountFn()
     // offEvent

@@ -1,5 +1,19 @@
 <template>
-  <div class="syp-app" @click.stop @mousedown.stop @mouseup.stop @pointerdown.stop @touchstart.stop>
+  <ForkAppFrame
+    :enabled="props.embedMode === 'dock'"
+    :current-view="currentView"
+    :entries="headerNavEntries"
+    :nav-label="t('app.nav.label')"
+    @select="selectHeaderNav"
+  >
+  <div
+    class="syp-app"
+    @click.stop
+    @mousedown.stop
+    @mouseup.stop
+    @pointerdown.stop
+    @touchstart.stop
+  >
     <div class="syp-panel">
       <div class="syp-header">
         <div class="syp-header-title-group">
@@ -11,8 +25,9 @@
         </div>
         <div class="syp-header-actions">
           <!-- 常驻主导航：入口集合与顺序恒定，任何点击都不隐藏、不替换入口。
-               当前所在项以蓝色高亮表示；「返回上一层」由内容区自己承担，不占用入口。 -->
-          <AppHeaderNav :entries="headerNavEntries" @select="selectHeaderNav" />
+               当前所在项以蓝色高亮表示；「返回上一层」由内容区自己承担，不占用入口。
+               dock 模式由 ForkAppFrame 左侧图标轨承担。 -->
+          <AppHeaderNav v-if="props.embedMode !== 'dock'" :entries="headerNavEntries" @select="selectHeaderNav" />
           <SypTooltip
             :content="t('app.action.close')"
             ellipsis
@@ -256,10 +271,13 @@
       />
     </div>
   </div>
+  </ForkAppFrame>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, provide, ref } from "vue"
+import ForkAppFrame from "~/fork/ForkAppFrame.vue"
+import { useForkAppBridge } from "~/fork/useForkAppBridge.ts"
 import "~/src/ui/assets/base.styl"
 import SypErrorDetailsPanel from "~/src/ui/components/common/SypErrorDetailsPanel.vue"
 import SypTooltip from "~/src/ui/components/common/SypTooltip.vue"
@@ -305,10 +323,13 @@ const props = defineProps<{
   docId?: string
   /** 进入快速发布后立即对该平台执行发布（文档块菜单的一键入口） */
   autoPublishPlatformKey?: string
+  /** menu=顶栏浮层；dock=右侧 Dock（二开） */
+  embedMode?: "menu" | "dock"
   onClose?: () => void
 }>()
 
 const currentView = ref<AppView>(props.initialView ?? "quick_publish")
+const activeDocId = ref<string | undefined>(props.docId)
 const isSettingsView = computed(() => currentView.value === "settings")
 const isManageView = computed(() => currentView.value === "manage")
 const isSinglePublishView = computed(() => currentView.value === "single_publish")
@@ -340,6 +361,26 @@ let settingsSwitchLoadingTimer: number | undefined
 const headerNavEntries = computed(() =>
   buildHeaderNavEntries({ currentView: currentView.value, hasDocument: quickPublish.state.hasDocument })
 )
+
+useForkAppBridge({
+  embedMode: () => props.embedMode,
+  docId: activeDocId,
+  currentView,
+  setSection: (section) => settings.setSection(section as SettingsSection),
+  initDoc: async (docId) => {
+    try {
+      await quickPublish.init(docId)
+    } catch (e) {
+      initError.value = e instanceof Error ? e.message : String(e ?? t("common.unknownError"))
+    }
+  },
+  publishByKey: (platformKey) => {
+    const target = quickPublish.state.platformItems.find((item) => item.platformKey === platformKey)
+    if (target) {
+      publishToPlatform(target)
+    }
+  },
+})
 
 /**
  * 顶部导航点击。
@@ -533,7 +574,7 @@ onMounted(async () => {
     await settings.setSection(props.initialSection)
   }
   try {
-    await quickPublish.init(props.docId)
+    await quickPublish.init(activeDocId.value)
   } catch (e) {
     initError.value = e instanceof Error ? e.message : String(e ?? t("common.unknownError"))
   }
@@ -573,7 +614,7 @@ async function openSettings() {
 
 async function backToQuickPublish() {
   currentView.value = "quick_publish"
-  await quickPublish.init(props.docId)
+  await quickPublish.init(activeDocId.value)
 }
 
 async function openManage() {

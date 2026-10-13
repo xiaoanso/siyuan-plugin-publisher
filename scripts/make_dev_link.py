@@ -12,7 +12,7 @@ import scriptutils
 # ************************************ 在这里填写你的配置 ************************************
 # 请在这里写下你的 "workspace/data/plugins" 目录
 # 比如这样 targetDir = 'H:\\SiYuanDevSpace\\data\\plugins'
-targetDir = ''
+targetDir = '/Users/jackin/Documents/siyuan/data/plugins'
 # dev 构建输出目录，相对于项目根路径
 devOutDir = 'dist'
 # ******************************************************************************************

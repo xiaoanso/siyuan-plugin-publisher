@@ -20,6 +20,8 @@ import type { SettingsSection } from "~/src/ui/composables/useSettings.ts"
 
 export type InitialView = AppView
 
+export type EmbedMode = "menu" | "dock"
+
 interface CreateAppOptions {
   initialView?: InitialView
   /** 初始设置分区，缺省「账号设置」 */
@@ -28,6 +30,8 @@ interface CreateAppOptions {
   docId?: string
   /** 进入快速发布后立即对该平台执行发布（文档块菜单「快速发布 → 平台」的一键入口） */
   autoPublishPlatformKey?: string
+  /** menu=顶栏浮层（上游默认）；dock=右侧 Dock（二开主入口） */
+  embedMode?: EmbedMode
   locale?: string
   messages?: Record<string, any>
   fallbackResolve?: (key: string) => string | undefined
@@ -45,6 +49,7 @@ export const createApp = (options: CreateAppOptions = {}) => {
     initialSection: options.initialSection,
     docId: options.docId,
     autoPublishPlatformKey: options.autoPublishPlatformKey,
+    embedMode: options.embedMode ?? "menu",
     onClose: options.onClose,
   })
 

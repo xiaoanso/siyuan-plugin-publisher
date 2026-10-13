@@ -105,7 +105,8 @@ export default defineConfig({
   },
   build: {
     outDir: distDir,
-    emptyOutDir: true,
+    // watch 时不清空：dist 软链进思源 data/plugins，清空瞬间缺 plugin.json 会被思源判为卸载并删掉软链
+    emptyOutDir: !isWatch,
     sourcemap: false,
     minify: !isWatch,
     cssCodeSplit: false,

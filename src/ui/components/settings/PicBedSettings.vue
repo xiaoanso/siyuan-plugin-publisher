@@ -750,11 +750,15 @@ function stringifyDetails(input: unknown) {
 
 .syp-picgo-uploader-layout
   display grid
-  grid-template-columns minmax(150px, 190px) minmax(0, 1fr)
+  // 左侧随按钮内容收缩，避免按钮被拉满整列
+  grid-template-columns max-content minmax(0, 1fr)
   gap 16px
   align-items start
 
 .syp-picgo-uploader-list
+  // 列宽随最长按钮内容收缩；子项 width:100% 后左右内边距一致
+  width max-content
+  max-width 100%
   display flex
   flex-direction column
   gap 8px
@@ -763,7 +767,8 @@ function stringifyDetails(input: unknown) {
 
 .syp-picgo-uploader-item
   width 100%
-  padding 9px 11px
+  box-sizing border-box
+  padding 9px 12px
   display flex
   flex-direction column
   gap 4px

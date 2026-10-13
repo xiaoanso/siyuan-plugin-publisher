@@ -30,11 +30,15 @@ fork/
   index.ts              # installFork / showForkIfDesktop
   dockHost.ts           # 右侧 Dock 注册与打开
   DockShell.vue         # 图标轨布局
-  ForkAppFrame.vue      # 包住现有 App，dock 时才出现左侧轨
+  ForkAppFrame.vue      # 包住现有 App，dock 时才出现左侧轨；挂载 ui-overrides
   useForkAppBridge.ts   # Dock 内切视图
+  styles/
+    ui-overrides.styl   # 二开布局皮肤（设置顶栏导航 / 图床列宽 / Cookie 响应式）
 ```
 
 上游文件只留薄调用：`siyuan/index.ts`（`installFork`）、`pluginHost.ts`（`showForkIfDesktop`）、`createApp.ts`（`embedMode`）、`App.vue`（`ForkAppFrame` + `useForkAppBridge`）。
+
+**布局皮肤不要改上游 `base.styl` / 设置组件 scoped**：一律写进 `fork/styles/ui-overrides.styl`（选择器挂 `.syp-app .syp-panel`，压过上游与 scoped）。合上游后若布局回退，先查 class 是否被改名。
 
 ## 部署到思源
 

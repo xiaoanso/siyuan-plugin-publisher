@@ -1,0 +1,128 @@
+/*
+ * 二开 UI 布局覆盖（独占 fork/）。
+ * 选择器统一挂在 .syp-app .syp-panel 下，压过上游 base.styl 与 Vue scoped。
+ * 合上游后若布局失效，优先核对这些 class 是否被上游改名。
+ */
+@import "../../src/ui/assets/variables.styl"
+
+// ---------------------------------------------------------------------------
+// 设置分区：顶部横向导航（替代上游左侧栏）
+// ---------------------------------------------------------------------------
+.syp-app .syp-panel
+  .syp-shell
+    display flex
+    flex-direction column
+    gap 0
+    min-height 0
+    flex 1
+
+    &.is-quick-publish,
+    &.is-settings
+      display flex
+
+  .syp-shell__nav
+    display flex
+    flex-wrap wrap
+    align-items center
+    gap 2px
+    flex-shrink 0
+    padding 6px 12px
+    background var(--b3-theme-surface, $syp-bg-secondary)
+    border-right none
+    border-bottom 1px solid var(--b3-border-color, $syp-border-secondary)
+    overflow-x auto
+    overflow-y visible
+    min-height 0
+
+  .syp-shell__section-title
+    display none
+
+  .syp-shell__nav-item
+    position relative
+    flex 0 0 auto
+    width auto
+    text-align center
+    padding 7px 10px 8px
+    font-size 12px
+    font-weight 500
+    margin 0
+    white-space nowrap
+
+    &.is-active
+      &::before
+        left 10px
+        right 10px
+        bottom 2px
+        top auto
+        width auto
+        height 3px
+
+  .syp-shell__main
+    flex 1
+
+@media (max-width: 960px)
+  .syp-app .syp-panel
+    .syp-shell__nav
+      padding 6px 8px
+      gap 2px
+      border none
+
+    .syp-shell__nav-item
+      padding 6px 10px 8px
+      font-size 11px
+
+// ---------------------------------------------------------------------------
+// 图床设置：左侧列表随按钮内容收缩
+// ---------------------------------------------------------------------------
+.syp-app .syp-panel
+  .syp-picgo-uploader-layout
+    grid-template-columns max-content minmax(0, 1fr)
+
+  .syp-picgo-uploader-list
+    width max-content
+    max-width 100%
+
+  .syp-picgo-uploader-item
+    box-sizing border-box
+    padding 9px 12px
+
+// ---------------------------------------------------------------------------
+// Cookie 授权面板：窄宽下描述与按钮自动换行
+// ---------------------------------------------------------------------------
+.syp-app .syp-panel
+  .syp-web-cookie-auth
+    box-sizing border-box
+    min-width 0
+    overflow hidden
+
+  .syp-web-cookie-auth__body
+    flex-wrap wrap
+    justify-content flex-start
+    gap 8px 10px
+
+  .syp-web-cookie-auth__desc
+    flex 1 1 100%
+    min-width 0
+
+  .syp-web-cookie-auth__actions
+    flex-wrap wrap
+    justify-content flex-start
+    flex 1 1 100%
+    min-width 0
+    max-width 100%
+
+  .syp-web-cookie-auth__action
+    flex 0 1 auto
+    min-width 0
+    max-width 100%
+    box-sizing border-box
+
+@media (max-width: 720px)
+  .syp-app .syp-panel
+    .syp-web-cookie-auth__header
+      align-items flex-start
+      flex-wrap wrap
+
+    .syp-web-cookie-auth__body
+      align-items flex-start
+      flex-direction row

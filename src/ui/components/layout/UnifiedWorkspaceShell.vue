@@ -1,6 +1,7 @@
 <template>
   <div class="syp-shell" :class="shellClass">
-    <nav v-if="isSettingsView" class="syp-shell__nav" :aria-label="t('nav.title')">
+    <nav v-if="isSettingsView" class="syp-shell__nav">
+      <div class="syp-shell__section-title">{{ t("nav.title") }}</div>
       <button
         v-for="item in navItems"
         :key="item.key"
@@ -39,7 +40,6 @@ defineEmits<{
 const isSettingsView = computed(() => props.currentView === "settings")
 const shellClass = computed(() => (isSettingsView.value ? "is-settings" : "is-quick-publish"))
 
-/** 顶部设置分区：账号 → 图床 → 偏好 → 发布修复 → AI → 关于 */
 const navItems: Array<{ key: SettingsSection; label: string }> = [
   { key: "account", label: t("nav.account") },
   { key: "picbed", label: t("nav.picbed") },

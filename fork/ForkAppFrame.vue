@@ -23,6 +23,7 @@ import LucidePenLine from "~icons/lucide/pen-line"
 import LucideRocket from "~icons/lucide/rocket"
 import LucideSettings from "~icons/lucide/settings"
 import DockShell, { type DockShellTab } from "./DockShell.vue"
+import "./styles/ui-overrides.styl"
 
 /**
  * 右侧 Dock 外壳。非 dock 模式直接透出子内容，调用方不用改布局分支。

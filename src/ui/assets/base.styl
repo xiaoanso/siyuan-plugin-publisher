@@ -193,49 +193,43 @@
       font-size $syp-font-size-sm
 
   .syp-shell
-    display flex
-    flex-direction column
+    display grid
     gap 0
     min-height 0
     flex 1
 
     &.is-quick-publish
-      display flex
+      grid-template-columns minmax(0, 1fr)
 
     &.is-settings
-      display flex
+      grid-template-columns 140px minmax(0, 1fr)
 
-  // 设置分区：顶部横向导航（账号 / 图床 / 偏好 / 发布修复 / AI / 关于）
   .syp-shell__nav
-    display flex
-    flex-wrap wrap
-    align-items center
-    gap 2px
-    flex-shrink 0
-    padding 6px 12px
-    background var(--b3-theme-surface, $syp-bg-secondary)
-    border-bottom 1px solid var(--b3-border-color, $syp-border-secondary)
-    overflow-x auto
+    padding 12px
+    background linear-gradient(180deg, var(--b3-theme-surface, $syp-bg-secondary) 0%, var(--b3-theme-background, $syp-bg-primary) 100%)
+    border-right 1px solid var(--b3-border-color, $syp-border-secondary)
+    overflow-y auto
     min-height 0
 
   .syp-shell__section-title
-    display none
+    margin-bottom 8px
+    font-size $syp-font-size-xs
+    color var(--b3-theme-on-surface-light, $syp-text-tertiary)
+    letter-spacing 0.08em
+    text-transform uppercase
 
   .syp-shell__nav-item
     position relative
-    flex 0 0 auto
-    width auto
-    text-align center
+    width 100%
+    text-align left
     border none
     background transparent
     color var(--b3-theme-on-surface, $syp-text-secondary)
-    padding 7px 10px 8px
+    padding 7px 10px 7px 14px
     border-radius 8px
-    font-size 12px
-    font-weight 500
-    margin 0
+    font-size 13px
+    margin-bottom 4px
     cursor pointer
-    white-space nowrap
     transition all 0.2s ease
 
     &:hover
@@ -251,12 +245,10 @@
       &::before
         content ""
         position absolute
-        left 10px
-        right 10px
-        bottom 2px
-        top auto
-        width auto
-        height 3px
+        left 5px
+        top 8px
+        bottom 8px
+        width 3px
         border-radius 999px
         background $syp-primary
 
@@ -267,7 +259,6 @@
     background var(--b3-theme-background, $syp-bg-primary)
     min-width 0
     min-height 0
-    flex 1
     overflow-y auto
     overflow-x hidden
 
@@ -461,13 +452,16 @@
       height auto
       max-height calc(100vh - 96px)
 
-    .syp-shell__nav
-      padding 6px 8px
-      gap 2px
+    .syp-shell
+      &.is-quick-publish
+        grid-template-columns 1fr
 
-    .syp-shell__nav-item
-      padding 6px 10px 8px
-      font-size 11px
+      &.is-settings
+        grid-template-columns 1fr
+
+    .syp-shell__nav
+      border none
+      padding $syp-spacing-md
 
     .syp-shell__main
       padding $syp-spacing-lg

@@ -361,6 +361,8 @@ function handleToggleManual() {
 
 .syp-web-cookie-auth
   width 100%
+  box-sizing border-box
+  min-width 0
   display flex
   flex-direction column
   gap 6px
@@ -370,6 +372,7 @@ function handleToggleManual() {
   border-radius 10px
   background $syp-card-bg-gradient
   box-shadow 0 1px 2px rgba(15, 23, 42, 0.04)
+  overflow hidden
 
   &.is-success
     border-color var(--b3-theme-success, $syp-success)
@@ -475,13 +478,14 @@ function handleToggleManual() {
 
 .syp-web-cookie-auth__body
   display flex
+  flex-wrap wrap
   align-items center
-  justify-content space-between
-  gap 10px
+  gap 8px 10px
   min-width 0
 
 .syp-web-cookie-auth__desc
-  min-width 140px
+  flex 1 1 100%
+  min-width 0
   color var(--b3-theme-on-surface-light, $syp-text-secondary)
   font-size 11px
   line-height 1.45
@@ -489,16 +493,22 @@ function handleToggleManual() {
 
 .syp-web-cookie-auth__actions
   display flex
+  flex-wrap wrap
   align-items center
-  justify-content flex-end
+  justify-content flex-start
   gap 6px
-  flex-shrink 0
+  flex 1 1 100%
+  min-width 0
+  max-width 100%
 
 :deep(.syp-web-cookie-auth__action)
   display inline-flex
   align-items center
   justify-content center
   gap 5px
+  flex 0 1 auto
+  min-width 0
+  max-width 100%
   min-height 26px
   padding 0 10px
   border-radius 7px
@@ -507,6 +517,7 @@ function handleToggleManual() {
   font-weight 600
   line-height 24px
   white-space nowrap
+  box-sizing border-box
   cursor pointer
   transition all 0.18s ease
 
@@ -565,13 +576,7 @@ function handleToggleManual() {
   background var(--b3-theme-surface, $syp-bg-primary)
 
 @media (max-width: 720px)
-  .syp-web-cookie-auth__header,
-  .syp-web-cookie-auth__body
+  .syp-web-cookie-auth__header
     align-items flex-start
-    flex-direction column
-
-  .syp-web-cookie-auth__actions
-    width 100%
-    justify-content flex-start
     flex-wrap wrap
 </style>

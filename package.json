@@ -8,6 +8,7 @@
   "license": "MIT",
   "scripts": {
     "makeLink": "python scripts/make_dev_link.py -d dist",
+    "makeCopy": "pnpm build && python scripts/deploy_copy.py -d dist",
     "serve": "vite --config vite.webapp.config.ts",
     "dev": "vite build --watch --config vite.config.ts",
     "test": "vitest",

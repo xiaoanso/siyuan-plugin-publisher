@@ -36,6 +36,15 @@ fork/
 
 上游文件只留薄调用：`siyuan/index.ts`（`installFork`）、`pluginHost.ts`（`showForkIfDesktop`）、`createApp.ts`（`embedMode`）、`App.vue`（`ForkAppFrame` + `useForkAppBridge`）。
 
+## 部署到思源
+
+| 命令 | 方式 |
+|------|------|
+| `pnpm makeLink` | 软链 `dist/` → `data/plugins/<name>`（开发监听用） |
+| `pnpm makeCopy` | 先 `pnpm build`，再**复制** `dist/` 到 `data/plugins/<name>`（实体文件） |
+
+复制脚本：`scripts/deploy_copy.py`（目标目录与 `make_dev_link.py` 相同，默认 `/Users/jackin/Documents/siyuan/data/plugins`）。若目标已是软链会先拆除再复制。
+
 ## UI 变更摘要
 
 桌面端主入口改为思源 **右侧 Dock**（参考 sireader `addDock` + `DockShell`）：
